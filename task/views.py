@@ -3,6 +3,15 @@ from django.contrib.auth.models import User,auth
 from django.contrib import messages
 
 
+
+from django.contrib.auth.decorators import login_required
+
+# Ensure the user is logged in before accessing the chat
+def chat_user(request):
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login page if the user is not authenticated
+    return render(request, 'chat.html')
+
 def index(request):
     return render(request,"index.html")
 

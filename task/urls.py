@@ -20,8 +20,10 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('messaging/', include('messaging.urls')),
     path('',views.index,name="index"),
     path("register",views.register,name="register"),
     path("login",views.login,name="login"),
-    path("logout",views.logout,name="logout")
+    path("logout",views.logout,name="logout"),
+    path("chat",views.chat_user,name="chat"),
 ]
