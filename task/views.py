@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 def chat_user(request):
     if not request.user.is_authenticated:
         return redirect('login')  # Redirect to login page if the user is not authenticated
-    return render(request, 'chat.html')
+    return render(request, 'chat.html',{'user': request.user})
 
 def index(request):
     return render(request,"index.html")
