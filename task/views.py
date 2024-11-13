@@ -24,7 +24,7 @@ def login(request):
 
         if user is not None:
             auth.login(request,user)
-            return redirect("/")
+            return redirect("/chat")
         else:
             messages.info(request,"invalid credential")
             return redirect("login")
