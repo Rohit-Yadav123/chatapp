@@ -7,27 +7,76 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            background-color: skyblue;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
 
+        /* Header */
         h1 {
             text-align: center;
             margin: 20px 0;
             color: #333;
         }
 
+        /* Container for user list and chat area */
         #chat-container {
             display: flex;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* User list section */
+        #users-section {
+            width: 25%;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        #users-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #users-section ul li {
+            padding: 20px;
+            background-color: #f1f1f1;
+            margin-bottom: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #users-section ul li:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Chat area section */
+        #chat-section {
+            flex: 1;
+            display: flex;
             flex-direction: column;
-            height: 80vh;
-            max-width: 600px;
-            margin: 0 auto;
+            padding: 20px;
             background-color: white;
-            border-radius: 8px;
+            border-radius: 1px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+        }
+
+        /* User's name in the chat section */
+        #chat-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: none; /* Initially hidden */
         }
 
         #messages {
@@ -37,7 +86,8 @@
             background-color: #f9f9f9;
             border-bottom: 1px solid #ddd;
             display: flex;
-            flex-direction: column;  /* Latest messages at the bottom */
+            flex-direction: column;
+            max-height: 60vh;
         }
 
         #messages .message {
@@ -50,13 +100,13 @@
 
         .sent {
             background-color: #e1ffc7;
-            align-self: flex-end;  /* Align to the right */
+            align-self: flex-end;
             text-align: right;
         }
 
         .received {
             background-color: #f1f1f1;
-            align-self: flex-start;  /* Align to the left */
+            align-self: flex-start;
             text-align: left;
         }
 
@@ -66,15 +116,22 @@
             margin-top: 5px;
         }
 
-        #users {
-            margin: 20px;
+        #loading {
+            text-align: center;
+            font-size: 1.2em;
+            color: #007bff;
         }
 
+        /* Message input form */
         #message-form {
-            display: flex;
             padding: 10px;
             border-top: 1px solid #ddd;
             background-color: #fff;
+            flex-shrink: 0;
+            display: none; /* Initially hidden */
+            align-items: center;
+            margin-top: 10px;
+            display: flex;
         }
 
         #message-input {
@@ -98,145 +155,157 @@
             background-color: #0056b3;
         }
 
-        #loading {
+        /* Start Chatting Text */
+        #start-chatting {
             text-align: center;
             font-size: 1.2em;
-            color: #007bff;
+            color: #888;
+            margin-top: 20px;
+            display: block; /* Show initially */
         }
+
     </style>
 </head>
 <body>
 
+    <!-- Header Section -->
     <h1>Real-Time Chat</h1>
 
+    <!-- Main Content Container -->
     <div id="chat-container">
-        <select id="users">
-            <!-- Users will be populated here -->
-        </select>
-
-        <div id="messages">
-            <!-- Messages will be shown here -->
+        <!-- Users List Section -->
+        <div id="users-section">
+            <ul id="user-list">
+                <!-- Users will be populated here -->
+            </ul>
         </div>
 
-        <div id="loading" style="display:none;">Loading previous messages...</div>
+        <!-- Chat Area Section -->
+        <div id="chat-section">
+            <!-- Chat header showing the selected user's name -->
+            <div id="chat-header">
+                C<span id="selected-user-name"></span>
+            </div>
 
-        <form id="message-form">
-            <input type="text" id="message-input" placeholder="Type your message" autocomplete="off">
-            <button type="submit">Send</button>
-        </form>
+            <div id="messages">
+                <!-- Messages will be shown here -->
+            </div>
+
+            <div id="loading" style="display:none;">Loading previous messages...</div>
+
+            <div id="start-chatting">
+                Start Chatting
+            </div>
+
+            <form id="message-form">
+                <input type="text" id="message-input" placeholder="Type your message" autocomplete="off">
+                <button type="submit">Send</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        // Pass the logged-in user's username from Django to JavaScript
         const currentUser = "{{ user.username }}";  // Replace with the actual Django template variable
-
         let chatSocket = null;
+        let selectedRecipientId = null;
+        let selectedRecipientName = ""; // Store the selected recipient's name
 
-        // Fetch the list of users
+        // Fetch the list of users and display them as clickable items
         async function fetchUsers() {
             const response = await fetch('/messaging/api/users/');
             const data = await response.json();
-            const select = document.getElementById("users");
+            const userList = document.getElementById("user-list");
             
+            // Clear the user list first
+            userList.innerHTML = '';
 
-            // Add a default option as the first element
-            const defaultOption = document.createElement("option");
-            defaultOption.value = "";  // Empty value to signify no selection
-            defaultOption.textContent = "Select a user";
-            select.appendChild(defaultOption);
-
+            // Populate the user list with clickable names
             data.users.forEach(user => {
-                const option = document.createElement("option");
-                option.value = user.id; // Use user.id instead of username
-                option.textContent = user.username;
-                select.appendChild(option);
+                const listItem = document.createElement("li");
+                listItem.textContent = user.username;
+                listItem.dataset.userId = user.id; // Store the user ID as a data attribute
+                listItem.addEventListener("click", function() {
+                    selectUser(user.id, user.username); // When a user is clicked, select it
+                });
+                userList.appendChild(listItem);
             });
         }
 
         fetchUsers();
 
-        // Open WebSocket connection when a user is selected
-        document.getElementById("users").addEventListener("change", async function() {
-            const recipientId = this.value; // Get the selected recipient's ID
-            console.log("Recipient ID selected:", recipientId);
+        // Function to handle user selection and fetch messages
+        async function selectUser(recipientId, recipientName) {
+            selectedRecipientId = recipientId; // Store the selected user ID
+            selectedRecipientName = recipientName; // Store the selected user's name
+            document.getElementById("chat-header").style.display = "block"; // Show the chat header
+            document.getElementById("selected-user-name").textContent = recipientName; // Display recipient's name in chat header
+            document.getElementById("start-chatting").style.display = "none"; // Hide "Start Chatting" text
+            document.getElementById("message-form").style.display = "flex"; // Show the message input form
+            document.getElementById("loading").style.display = "block"; // Show loading indicator
 
-            if (recipientId) {
-                // Show loading indicator while fetching historical messages
-                document.getElementById("loading").style.display = "block";
+            // Fetch previous messages for the selected user
+            const response = await fetch(`/messaging/api/messages/${recipientId}/`);
+            const data = await response.json();
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML = ''; // Clear previous messages
 
-                // Fetch previous messages from the API only when recipient is changed or on page load
-                const response = await fetch(`/messaging/api/messages/${recipientId}/`);
-                const data = await response.json();
-                const messagesDiv = document.getElementById("messages");
-                messagesDiv.innerHTML = ''; // Clear previous messages
-
-                // Display messages from the API (this should be the historical messages)
-                if (data.messages) {
-                    data.messages.forEach(message => {
-                        const sender = message.sender === currentUser ? "You" : message.sender;
-                        const messageElem = document.createElement("div");
-                        messageElem.classList.add('message', message.sender === currentUser ? 'sent' : 'received');
-                        messageElem.innerHTML = `
-                            <strong>${sender}</strong>
-                            <p>${message.content}</p>
-                            <span class="timestamp">${new Date(message.timestamp).toLocaleString()}</span>
-                        `;
-                        messagesDiv.appendChild(messageElem);
-                    });
-                }
-                
-                scrollToBottom();
-
-                // Hide loading indicator after messages are loaded
-                document.getElementById("loading").style.display = "none";
-
-                // Open WebSocket connection to send new messages
-                if (chatSocket) {
-                    chatSocket.close();  // Close any existing connection to the same recipient
-                }
-
-                chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${recipientId}/`);
-
-                // Handle incoming messages via WebSocket
-                chatSocket.onmessage = function(e) {
-                    const data = JSON.parse(e.data);
-
-                    // Check if the message is from the logged-in user
+            // Display messages from the API
+            if (data.messages) {
+                data.messages.forEach(message => {
+                    const sender = message.sender === currentUser ? "You" : message.sender;
                     const messageElem = document.createElement("div");
-                    const sender = data.sender === currentUser ? "You" : data.sender;
-                    messageElem.classList.add('message', data.sender === currentUser ? 'sent' : 'received');
+                    messageElem.classList.add('message', message.sender === currentUser ? 'sent' : 'received');
                     messageElem.innerHTML = `
                         <strong>${sender}</strong>
-                        <p>${data.message}</p>
-                        <span class="timestamp">${new Date().toLocaleString()}</span>
+                        <p>${message.content}</p>
+                        <span class="timestamp">${new Date(message.timestamp).toLocaleString()}</span>
                     `;
-                    document.getElementById("messages").appendChild(messageElem);
-
-                    // Scroll to the bottom to display the latest message
-                    scrollToBottom();
-                };
-
-                // Handle WebSocket closure
-                chatSocket.onclose = function() {
-                    console.log("Chat connection closed");
-                };
+                    messagesDiv.appendChild(messageElem);
+                });
             }
-        });
+            
+            scrollToBottom();
+
+            document.getElementById("loading").style.display = "none"; // Hide loading indicator
+
+            // Open WebSocket connection to send new messages
+            if (chatSocket) {
+                chatSocket.close();  // Close any existing connection
+            }
+
+            chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${recipientId}/`);
+
+            // Handle incoming messages via WebSocket
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const messageElem = document.createElement("div");
+                const sender = data.sender === currentUser ? "You" : data.sender;
+                messageElem.classList.add('message', data.sender === currentUser ? 'sent' : 'received');
+                messageElem.innerHTML = `
+                    <strong>${sender}</strong>
+                    <p>${data.message}</p>
+                    <span class="timestamp">${new Date().toLocaleString()}</span>
+                `;
+                document.getElementById("messages").appendChild(messageElem);
+                scrollToBottom();
+            };
+
+            chatSocket.onclose = function() {
+                console.log("Chat connection closed");
+            };
+        }
 
         // Send message via WebSocket when the form is submitted
         document.getElementById("message-form").onsubmit = function(e) {
             e.preventDefault();
             const message = document.getElementById("message-input").value;
-            const recipientId = document.getElementById("users").value;
 
-            if (chatSocket && message && recipientId) {
-                // Send the message over WebSocket (Do NOT call API here)
+            if (chatSocket && message && selectedRecipientId) {
                 chatSocket.send(JSON.stringify({
                     message: message,
-                    recipient_id: recipientId
+                    recipient_id: selectedRecipientId
                 }));
 
-                // Clear the input field
                 document.getElementById("message-input").value = '';
                 scrollToBottom();  // Scroll to the bottom to show the latest message
             }
@@ -248,5 +317,6 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
     </script>
+
 </body>
 </html>

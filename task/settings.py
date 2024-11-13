@@ -114,7 +114,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'task.wsgi.application'
-
+LOGIN_REDIRECT_URL = 'chat'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
