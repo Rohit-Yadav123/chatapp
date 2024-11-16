@@ -1,0 +1,214 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: skyblue;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header */
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #333;
+}
+
+/* Container for user list and chat area */
+#chat-container {
+    display: flex;
+    width: 100%;
+    flex: 1;
+}
+
+/* User list section */
+#users-section {
+    width: 25%;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#users-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#users-section ul li {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    margin-bottom: 1px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size:x-large;
+}
+
+.profile-icon {
+    font-size: 50px; /* Adjust size as needed */
+    color: skyblue; /* Adjust color as desired */
+    margin-right: 10px;
+}
+
+#users-section ul li:hover {
+    background-color: wheat;
+    color: black;
+    font-weight: 200;
+}
+
+/* Chat area section */
+#chat-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: white;
+    border-radius: 1px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* User's name in the chat section */
+#chat-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    display: none; /* Initially hidden */
+}
+
+#messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    max-height: 60vh;
+}
+
+#messages .message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.sent {
+    background-color: #e1ffc7;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.received {
+    background-color: #f1f1f1;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+}
+
+#loading {
+    text-align: center;
+    font-size: 1.2em;
+    color: #007bff;
+}
+
+/* Message input form */
+#message-form {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    flex-shrink: 0;
+    display: none; /* Initially hidden */
+    align-items: center;
+    margin-top: 10px;
+    display: flex;
+}
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    padding: 15px; /* Increase padding */
+    font-size: 1.1em; /* Increase font size */
+}
+
+#message-form button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 15px 20px; /* Increase padding for button */
+    font-size: 1.1em; 
+}
+
+#message-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Start Chatting Text */
+#start-chatting {
+    text-align: center;
+    font-size: 1.2em;
+    color: #888;
+    margin-top: 20px;
+    display: block; /* Show initially */
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #4CAF50; /* Change this color as needed */
+    color: white;
+}
+
+/* Left side (Real-Time Chat) */
+.left {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Right side (User Info and Logout) */
+.right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* Styling for the Logout Button */
+.btn {
+    padding: 8px 16px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #ff3328;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #218838;
+}
+
