@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
-
+from django.contrib.auth import logout as auth_logout
 
 
 from django.contrib.auth.decorators import login_required
@@ -9,11 +9,11 @@ from django.contrib.auth.decorators import login_required
 # Ensure the user is logged in before accessing the chat
 def chat_user(request):
     if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login page if the user is not authenticated
+        return redirect('/')  # Redirect to login page if the user is not authenticated
     return render(request, 'chat.html',{'user': request.user})
 
 def index(request):
-    return render(request,"index.html")
+    return render(request,"home.html")
 
 def login(request):
     if request.method =='POST':
@@ -24,13 +24,13 @@ def login(request):
 
         if user is not None:
             auth.login(request,user)
-            return redirect("/chat")
+            return redirect("chat")
         else:
-            messages.info(request,"invalid credential")
-            return redirect("login")
+            messages.error(request,"invalid credential", extra_tags='login')
+            return render(request, 'home.html')
 
     else:
-        return render(request,'login.html')
+        return render(request,'home.html')
 
 
 # Create your views here.
@@ -46,31 +46,29 @@ def register(request):
         if len(password1)>=8:
             if password1==password2:
                 if User.objects.filter(username=username).exists():
-                    messages.info(request,"username taken")
-                    return redirect('register')
+                    return redirect('/')
                 elif User.objects.filter(email=email).exists():
-                    messages.info(request,"email taken")
-                    return redirect('register')
+                    return redirect('/')
 
                 else:
                     user=User.objects.create_user(username=username,password=password1,email=email,first_name=first_name,last_name=last_name)
                     user.save()    
                     print("user created")
-                    return redirect('login')
+                    messages.success(request,"user created, please login.", extra_tags='signup')
+                    return redirect('/')
 
             else:
-                messages.info(request,"password not matched")
-                return redirect('register')
+                messages.error(request,"password not matched", extra_tags='signup')
+                return render(request, 'home.html')
         else:
-            messages.info(request,"password is too short it must be 8 character long")
-            return redirect('register')
+            messages.error(request,"password is too short it must be 8 character long", extra_tags='signup')
+            return render(request, 'home.html')
         return redirect('/')
-
-
-
     else:
-        return render(request,'register.html')
+        return render(request,'home.html')
 
-def logout(request):
-    auth.logout(request)
+def user_logout(request):
+    messages.get_messages(request).used = True  
+    auth_logout(request)  # Log out the user using the Django auth_logout function
+    messages.success(request, "Logout successfully!", extra_tags='logout')  # Add a success message
     return redirect('/')

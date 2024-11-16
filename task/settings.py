@@ -108,6 +108,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.csrf',
             ],
         },
     },
@@ -125,6 +126,15 @@ LOGIN_REDIRECT_URL = 'chat'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+STATIC_URL = '/static/'
+
+# Add the static folder to STATICFILES_DIRS
+import os
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),  # Adjust if your base folder isn't set correctly
+]
+
 
 DATABASES = {
     'default': {
@@ -177,7 +187,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'chat'
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_LOGOUT_ON_GET= True
 ACCOUNT_UNIQUE_EMAIL = True

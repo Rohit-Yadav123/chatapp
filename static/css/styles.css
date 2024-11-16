@@ -1,0 +1,447 @@
+:root{
+    --form-height:700px;
+    --form-width: 900px;
+    /*  Sea Green */
+    --left-color: #25c74e;
+    /*  Light Blue  */
+    --right-color: #25c74e;
+  }
+  
+  body, html{
+    background-color: skyblue;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    letter-spacing: 0.5px;
+  }
+  
+  .container{
+    width: var(--form-width);
+    height: var(--form-height);
+    position: relative;
+    margin: auto;
+    box-shadow: 2px 10px 40px rgba(22,20,19,0.4);
+    border-radius: 10px;
+    margin-top: 50px;
+    background-color: white;
+  }
+  /* 
+  ----------------------
+        Overlay
+  ----------------------
+  */
+  .overlay{
+    width: 100%; 
+    height: 100%;
+    position: absolute;
+    z-index: 100;
+    background-image: linear-gradient(to right, var(--left-color), var(--right-color));
+    border-radius: 10px;
+    color: white;
+    clip: rect(0, 385px, var(--form-height), 0);
+  }
+  
+  .open-sign-up{
+      animation: slideleft 1s linear forwards;
+  }
+  
+  .open-sign-in{
+      animation: slideright 1s linear forwards;
+  }
+  
+  .overlay .sign-in, .overlay .sign-up{
+    /*  Width is 385px - padding  */
+    --padding: 50px;
+    width: calc(385px - var(--padding) * 2);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px var(--padding);
+    text-align: center;
+  }
+  
+  .overlay .sign-in{
+    float: left;
+  }
+  
+  .overlay-text-left-animation{
+      animation: text-slide-in-left 1s linear;
+  }
+  .overlay-text-left-animation-out{
+      animation: text-slide-out-left 1s linear;
+  }
+  
+  .overlay .sign-up{
+    float:right;
+  }
+  
+  .overlay-text-right-animation{
+      animation: text-slide-in-right 1s linear;
+  }
+  
+  .overlay-text-right-animation-out{
+      animation: text-slide-out-right 1s linear;
+  }
+  
+  
+  .overlay h1{
+    margin: 0px 5px;
+    font-size: 2.1rem;
+  }
+  
+  .overlay p{
+    margin: 20px 0px 30px;
+    font-weight: 200;
+    font-size: 20px;
+  }
+  /* 
+  ------------------------
+        Buttons
+  ------------------------
+  */
+  .switch-button, .control-button{
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 200;
+    width: 140px;
+    height: 40px;
+    font-size: 16px;
+    text-transform: uppercase;
+    background: none;
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .switch-button{
+    border: 2px solid;
+  }
+  
+  .control-button{
+    border: none;
+    margin-top: 15px;
+  }
+  
+  .switch-button:focus, .control-button:focus{
+    outline:none;
+  }
+  
+  .control-button.up{
+    background-color: var(--left-color);
+  }
+  
+  .control-button.in{
+    background-color: var(--right-color);
+  }
+  
+  /* 
+  --------------------------
+        Forms
+  --------------------------
+  */
+  .form{
+    width: 100%; 
+    height: 100%;
+    position: absolute;
+    border-radius: 10px;
+  }
+  
+  .form .sign-in, .form .sign-up{
+    --padding: 50px;
+    position:absolute;
+      /*  Width is 100% - 385px - padding  */
+    width: calc(var(--form-width) - 385px - var(--padding) * 2);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px var(--padding);
+    text-align: center;
+  }
+  
+  /* Sign in is initially not displayed */
+  .form .sign-in{
+    display: none;
+  }
+  
+  .form .sign-in{
+    left:0;
+  }
+  
+  .form .sign-up{
+    right: 0;
+  }
+  
+  .form-right-slide-in{
+    animation: form-slide-in-right 1s;
+  }
+  
+  .form-right-slide-out{
+    animation: form-slide-out-right 1s;
+  }
+  
+  .form-left-slide-in{
+    animation: form-slide-in-left 1s;
+  }
+  
+  .form-left-slide-out{
+    animation: form-slide-out-left 1s;
+  }
+  
+  .form .sign-in h1{
+    color: var(--right-color);
+    margin: 0;
+  }
+  
+  .form .sign-up h1{
+    color: var(--left-color);
+    margin: 0;
+  }
+  
+  .social-media-buttons {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 15px;
+}
+
+.social-media-buttons .icon {
+    width: 60px; /* Set the size of the circle */
+    height: 60px; /* Set the size of the circle */
+    border: 1px solid #3b3939; /* Border around the circle */
+    border-radius: 50%; /* Makes it a circle */
+    display: flex;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+    margin: 10px 7px;
+    padding: 5px; /* Optional padding if the icon is too close to the border */
+}
+
+.social-media-buttons .icon svg {
+    width: 100%; /* Make SVG scale to fill the circle */
+    height: 100%; /* Make SVG scale to fill the circle */
+    max-width: 50px; /* Optional: control max width */
+    max-height: 50px; /* Optional: control max height */
+    object-fit: contain; /* Ensures the icon fits within the circle */
+}
+
+
+  
+  .small{
+    font-size: 16px;
+    color: grey;
+    font-weight: 200;
+    margin: 5px;
+  }
+  
+  .social-media-buttons .icon svg{
+    width: 25px;
+    height: 25px;
+  }
+  
+  #sign-in-form input, #sign-up-form input{
+    margin: 12px;
+    font-size: 14px;
+    padding: 15px;
+    width: 260px;
+    font-weight: 300;
+    border: none;
+    background-color: #e4e4e494;
+    font-family: 'Helvetica Neue', sans-serif;
+    letter-spacing: 1.5px;
+    padding-left: 20px;
+  }
+  
+  #sign-in-form input::placeholder{
+    letter-spacing: 1px;
+  }
+  
+  .forgot-password{
+    font-size: 16px;
+    display: inline-block;
+    border-bottom: 2px solid #efebeb;
+    padding-bottom: 3px;
+  }
+  
+  .forgot-password:hover{
+    cursor: pointer;
+  }
+
+
+  /* for the messages card css */
+  .messages-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-card {
+    background-color: #f9f9f9;
+    border-left: 5px solid;
+    border-radius: 5px;
+    padding: 10px 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
+    max-width: 300px;
+    word-wrap: break-word;
+    animation: fade-in 0.5s ease-in-out;
+}
+
+/* Success, error, etc., styles */
+.message-card.success {
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
+.message-card.error {
+    border-color: #f44336;
+    color: #f44336;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+/* end block for the messages */
+  
+  /* 
+  ---------------------------
+      Animation
+  ---------------------------
+  */
+  @keyframes slideright{
+    0%{
+      clip: rect(0, 385px, var(--form-height), 0);
+    }
+    30%{
+          clip: rect(0, 480px, var(--form-height), 0);
+    }
+    /*  we want the width to be slightly larger here  */
+    50%{
+       clip: rect(0px, calc(var(--form-width) / 2 + 480px / 2), var(--form-height), calc(var(--form-width) / 2 - 480px / 2));
+    }
+    80%{
+           clip: rect(0px, var(--form-width), var(--form-height), calc(var(--form-width) - 480px));
+    }
+    100%{
+       clip: rect(0px, var(--form-width), var(--form-height), calc(var(--form-width) - 385px));
+    }
+  }
+  
+  @keyframes slideleft{
+    100%{
+      clip: rect(0, 385px, var(--form-height), 0);
+    }
+    70%{
+          clip: rect(0, 480px, var(--form-height), 0);
+    }
+    /*  we want the width to be slightly larger here  */
+    50%{
+       clip: rect(0px, calc(var(--form-width) / 2 + 480px / 2), var(--form-height), calc(var(--form-width) / 2 - 480px / 2));
+    }
+    30%{
+           clip: rect(0px, var(--form-width), var(--form-height), calc(var(--form-width) - 480px));
+    }
+    0%{
+       clip: rect(0px, var(--form-width), var(--form-height), calc(var(--form-width) - 385px));
+    }
+  }
+  
+  @keyframes text-slide-in-left{
+    0% {
+      padding-left: 20px;
+    }
+    100% {
+      padding-left: 50px;
+    }
+  }
+  
+  @keyframes text-slide-in-right{
+    0% {
+      padding-right: 20px;
+    }
+    100% {
+      padding-right: 50px;
+    }
+  }
+  
+  @keyframes text-slide-out-left{
+    0% {
+      padding-left: 50px;
+    }
+    100% {
+      padding-left: 20px;
+    }
+  }
+  
+  @keyframes text-slide-out-right{
+    0% {
+      padding-right: 50px;
+    }
+    100% {
+      padding-right: 20px;
+    }
+  }
+  
+  @keyframes form-slide-in-right{
+    0%{
+      padding-right: 100px;
+    }
+    100%{
+      padding-right: 50px;
+    }
+  }
+  
+  @keyframes form-slide-in-left{
+    0%{
+      padding-left: 100px;
+    }
+    100%{
+      padding-left: 50px;
+    }
+  }
+  
+  @keyframes form-slide-out-right{
+    0%{
+      padding-right: 50px;
+    }
+    100%{
+      padding-right: 80px;
+    }
+  }
+  
+  @keyframes form-slide-out-left{
+    0%{
+      padding-left: 50px;
+    }
+    100%{
+      padding-left: 80px;
+    }
+  }
+  
