@@ -76,6 +76,12 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        # Logger for session-related behavior
+        'django.contrib.sessions': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Change this to DEBUG for detailed logs
+            'propagate': False,  # Prevent duplication in root logger
+        },
         '': {
             'handlers': ['console'],
             'level': 'DEBUG',
@@ -83,6 +89,13 @@ LOGGING = {
         },
     },
 }
+
+
+# settings.py
+SESSION_COOKIE_AGE = 300
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True 
+SESSION_SAVE_EVERY_REQUEST = True 
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
