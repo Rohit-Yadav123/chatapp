@@ -16,6 +16,19 @@ def get_messages(request, user_id):
     return JsonResponse({"messages": messages_data})
 
 def list_users(request):
-    users = User.objects.exclude(id=request.user.id)
-    users_data = [{"id": user.id, "username": user.username} for user in users]
+    users = User.objects.exclude(id=request.user.id).exclude(is_superuser=True)
+    
+    # Prepare user data with all fields
+    users_data = [
+        {
+            "id": user.id,
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "is_superuser": user.is_superuser,
+            "date_joined": user.date_joined,
+        }
+        for user in users
+    ]
     return JsonResponse({"users": users_data})
