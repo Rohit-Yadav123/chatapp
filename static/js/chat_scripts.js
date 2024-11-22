@@ -21,7 +21,7 @@ async function fetchUsers() {
 
         // Add the username text
         const usernameText = document.createElement("span");
-        usernameText.textContent = user.username;
+        usernameText.textContent = user.first_name+ " " + user.last_name;
 
         // Append icon and username to list item
         listItem.appendChild(profileIcon);
@@ -29,7 +29,7 @@ async function fetchUsers() {
 
         listItem.dataset.userId = user.id; // Store the user ID as a data attribute
         listItem.addEventListener("click", function() {
-            selectUser(user.id, user.username); // When a user is clicked, select it
+            selectUser(user.id, user.first_name+" "+ user.last_name); // When a user is clicked, select it
         });
         userList.appendChild(listItem);
     });

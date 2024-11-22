@@ -51,7 +51,10 @@
                 <input type="text" name="username" placeholder="Username" required />
                 <input type="password" name="password" placeholder="Password" required />
                 <button type="submit" class="control-button in">Sign In</button>
-            </form>            
+            </form>   
+            <a href="{% url 'password_reset' %}" style="display: inline-block; margin-top: 20px; color: #e90808; font-size: 16px; text-decoration: none; padding: 10px 15px; transition: background-color 0.3s ease;">
+              Forgot Password?
+          </a>                 
           </div>
           <div class="sign-up" id="sign-up-info">
             <h1>Create Account</h1>
