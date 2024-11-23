@@ -225,8 +225,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'email',
         ],
         'APP': {
-                    'client_id': config['GOOGLE_SECRET_KEY'],
-                    'secret': config['GOOGLE_CLIENT_ID'],
+                    'client_id': config['GOOGLE_CLIENT_ID'],
+                    'secret': config['GOOGLE_SECRET_KEY'],
                 },
         'AUTH_PARAMS': {
             'access_type': 'online',
