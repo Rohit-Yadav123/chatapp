@@ -1,0 +1,12 @@
+DEBUG: True
+allowed_hosts:
+  - localhost
+  - 127.0.0.1
+DATABASE_NAME: chat_msg_db
+DATABASE_USER: messageuser
+DATABASE_PASSWORD: message@2024
+DATABASE_HOST: localhost
+EMAIL_HOST_USER: mr.yadav.tech@gmail.com
+EMAIL_HOST_PASSWORD: ydnueowsgscxsyic
+GOOGLE_SECRET_KEY: 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
+GOOGLE_CLIENT_ID: 155444171728-2sagnnhabu5unf9v1pka0j3unclqt2s9.apps.googleusercontent.com

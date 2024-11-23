@@ -35,25 +35,21 @@ Install the required packages from requirements.txt:
 
 pip install -r requirements.txt
 
-## Configure the Database
-
-### Update the DATABASES setting in the project's settings.py file to match your PostgreSQL setup. Example:
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '<database_name>',
-        'USER': '<database_user>',
-        'PASSWORD': '<database_password>',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 
 ### Create the database in PostgreSQL if it doesn’t already exist:
 
 CREATE DATABASE <database_name>;
+
+### Create a new user with a password
+
+CREATE USER your_username WITH PASSWORD 'your_password';
+
+### Grant all privileges on a specific database to the user
+
+GRANT ALL PRIVILEGES ON DATABASE your_database_name TO your_username;
+
+### Update all the configurations in the config.yml file before running the project.
 
 ## Run Migrations
 

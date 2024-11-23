@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import yaml
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+CONFIG_FILE_PATH = os.path.join(BASE_DIR, 'config.yml')
+
+# Load the YAML file
+with open(CONFIG_FILE_PATH, 'r') as config_file:
+    config = yaml.safe_load(config_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -23,10 +29,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9zw0pk0f+tuj*o6cn-ekx@60gk9x9*%ef83$58a-i$ts(o#-9@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config['DEBUG']
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-SITE_ID = 1  
+ALLOWED_HOSTS = config.get('allowed_hosts', [])
 
 # Application definition
 
@@ -133,12 +138,6 @@ LOGIN_REDIRECT_URL = 'chat'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 
 STATIC_URL = '/static/'
 
@@ -152,10 +151,10 @@ STATICFILES_DIRS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chat_msg_db',  
-        'USER': 'messageuser',  
-        'PASSWORD': 'message@2024',  
-        'HOST': 'localhost', 
+        'NAME': config['DATABASE_NAME'],  
+        'USER': config['DATABASE_USER'],  
+        'PASSWORD': config['DATABASE_PASSWORD'],  
+        'HOST': config['DATABASE_HOST'], 
         'PORT': '5432',  # Default PostgreSQL port
     }
 }
@@ -165,8 +164,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mr.yadav.tech@gmail.com'
-EMAIL_HOST_PASSWORD = 'ydnueowsgscxsyic'
+EMAIL_HOST_USER = config['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -226,8 +225,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'email',
         ],
         'APP': {
-                    'client_id': "155444171728-2sagnnhabu5unf9v1pka0j3unclqt2s9.apps.googleusercontent.com",
-                    'secret': "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",
+                    'client_id': config['GOOGLE_CLIENT_ID'],
+                    'secret': config['GOOGLE_SECRET_KEY'],
                 },
         'AUTH_PARAMS': {
             'access_type': 'online',
