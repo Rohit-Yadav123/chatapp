@@ -46,7 +46,7 @@ h1 {
     margin-bottom: 1px;
     border-radius: 4px;
     cursor: pointer;
-    font-size:x-large;
+    font-size:xx-large;
 }
 
 .profile-icon {
@@ -212,3 +212,26 @@ h1 {
     background-color: #218838;
 }
 
+
+#user-search-box {
+    width: 100%; /* Full width minus padding in the parent container */
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    font-size: x-large;
+    height: 70px;
+    border: 1px solid #ddd; /* Matches the border-right of #users-section */
+    border-radius: 4px; /* Consistent with list item border-radius */
+    box-sizing: border-box;
+    background-color: #f1f1f1; /* Matches list item background color */
+    color: black; /* Text color */
+}
+
+#user-search-box::placeholder {
+    color: gray; /* Placeholder text color */
+}
+
+#user-search-box:focus {
+    outline: none; /* Removes default browser outline */
+    border-color: skyblue; /* Highlighted border color */
+    box-shadow: 0 0 5px skyblue; /* Subtle shadow effect for focus */
+}
