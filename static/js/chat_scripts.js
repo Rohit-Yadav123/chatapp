@@ -2,39 +2,90 @@ let chatSocket = null;
 let selectedRecipientId = null;
 let selectedRecipientName = ""; // Store the selected recipient's name
 
-// Fetch the list of users and display them as clickable items
-async function fetchUsers() {
-    const response = await fetch('/messaging/api/users/');
-    const data = await response.json();
-    const userList = document.getElementById("user-list");
-    document.getElementById("message-form").style.display = "none"; // Ensure the message form is hidden at page load
-    // Clear the user list first
-    userList.innerHTML = '';
-
-    // Populate the user list with clickable names
-    data.users.forEach(user => {
-        const listItem = document.createElement("li");
-        // Create an i element for the profile icon using Material Icons
-        const profileIcon = document.createElement("i");
-        profileIcon.classList.add("material-icons", "profile-icon");
-        profileIcon.textContent = "account_circle"; // Set the Material Icon
-
-        // Add the username text
-        const usernameText = document.createElement("span");
-        usernameText.textContent = user.first_name+ " " + user.last_name;
-
-        // Append icon and username to list item
-        listItem.appendChild(profileIcon);
-        listItem.appendChild(usernameText);
-
-        listItem.dataset.userId = user.id; // Store the user ID as a data attribute
-        listItem.addEventListener("click", function() {
-            selectUser(user.id, user.first_name+" "+ user.last_name); // When a user is clicked, select it
-        });
-        userList.appendChild(listItem);
-    });
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
+
+// Fetch the list of users and display them as clickable items
+async function fetchUsers() {
+    try {
+        const response = await fetch('/messaging/api/users/');
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        const usersSection = document.getElementById("users-section"); // Target the main section
+        const userList = document.getElementById("user-list");
+
+        // Clear the user list before populating
+        userList.innerHTML = '';
+
+        // Create and add the search box at the top of the list if it doesn't exist
+        let searchBox = document.getElementById("user-search-box");
+        if (!searchBox) {
+            searchBox = document.createElement("input");
+            searchBox.type = "text";
+            searchBox.placeholder = "Search users by name...";
+            searchBox.id = "user-search-box";
+            searchBox.classList.add("search-box"); // Optional: Add a CSS class for styling
+            usersSection.insertBefore(searchBox, userList); // Add the search box above the list
+        }
+
+        // Populate the user list with clickable names
+        data.users.forEach(user => {
+            const listItem = document.createElement("li");
+
+            // Create an i element for the profile icon using Material Icons
+            const profileIcon = document.createElement("i");
+            profileIcon.classList.add("material-icons", "profile-icon");
+            profileIcon.textContent = "account_circle";
+            
+            // Capitalize first letters of first_name and last_name
+            const firstName = capitalizeFirstLetter(user.first_name);
+            const lastName = capitalizeFirstLetter(user.last_name);
+
+            // Add the full name text
+            const fullName = document.createElement("span");
+            fullName.textContent = `${firstName} ${lastName}`;
+
+
+            // Append icon and full name to the list item
+            listItem.appendChild(profileIcon);
+            listItem.appendChild(fullName);
+
+            // Store user ID and full name (lowercase) for filtering
+            listItem.dataset.userId = user.id;
+            listItem.dataset.fullName = `${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`;
+
+            // Add click event listener to select user
+            listItem.addEventListener("click", function() {
+                selectUser(user.id, `${user.first_name} ${user.last_name}`);
+            });
+
+            userList.appendChild(listItem);
+        });
+
+        // Add event listener for the search box to filter users dynamically
+        searchBox.addEventListener("input", function() {
+            const filterText = searchBox.value.toLowerCase();
+            const listItems = userList.querySelectorAll("li");
+            listItems.forEach(item => {
+                const fullName = item.dataset.fullName; // Get the stored lowercase full name
+                if (fullName.includes(filterText)) {
+                    item.style.display = ""; // Show the item if it matches
+                } else {
+                    item.style.display = "none"; // Hide the item if it doesn't match
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+}
+
+// Call the function to fetch and render the users
 fetchUsers();
 
 // Function to handle user selection and fetch messages
