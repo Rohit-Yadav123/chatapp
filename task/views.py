@@ -46,8 +46,10 @@ def register(request):
         if len(password1)>=8:
             if password1==password2:
                 if User.objects.filter(username=username).exists():
+                    messages.error(request,"Username already exists.", extra_tags='signup')
                     return redirect('/')
                 elif User.objects.filter(email=email).exists():
+                    messages.error(request,"Email already exists.", extra_tags='signup')
                     return redirect('/')
 
                 else:
